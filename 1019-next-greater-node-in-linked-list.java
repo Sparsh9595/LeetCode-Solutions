@@ -12,27 +12,29 @@
 class Solution {
     public int[] nextLargerNodes(ListNode head) {
 
-        ArrayList<Integer> list = new ArrayList<>();
+        int n = 0;
+        for (ListNode p = head; p != null; p = p.next)
+            n++;
 
+        int[] values = new int[n];
+        int[] ans = new int[n];
+        int[] stack = new int[n];
+
+        int i = 0;
         while (head != null) {
-            list.add(head.val);
+            values[i++] = head.val;
             head = head.next;
         }
 
-        int n = list.size();
-        int[] ans = new int[n];
+        int top = -1;
 
-        Stack<Integer> st = new Stack<>();
+        for (i = 0; i < n; i++) {
 
-        for (int i = 0; i < n; i++) {
-
-            while (!st.isEmpty() &&
-                    list.get(i) > list.get(st.peek())) {
-
-                ans[st.pop()] = list.get(i);
+            while (top >= 0 && values[i] > values[stack[top]]) {
+                ans[stack[top--]] = values[i];
             }
 
-            st.push(i);
+            stack[++top] = i;
         }
 
         return ans;
